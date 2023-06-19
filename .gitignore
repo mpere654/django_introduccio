@@ -1,0 +1,10 @@
+#eliminar la subida de los ficheros
+*.pyc
+/env/
+/venv/
+/static/*
+/media/*
+.env
+db.sqlite3
+.coverage
+__pycache__
