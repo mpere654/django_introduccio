@@ -1,0 +1,24 @@
+<h1>{{ question.question_text }}</h1>
+
+<ul>
+{# Recorremos la question, recorremos los choice y por choice su vote #}
+{% for choice in question.choice_set.all %}
+    <li>{{ choice.choice_text }} --  
+        {% if choice.vote_set.exists %}
+            {% comment %}
+                podemos sustituir por este
+                {% for vote in choice.vote_set.all %}
+                    {{ vote }}
+                {% endfor %}  
+            {% endcomment %}
+            {# si existe voto cogemos el primer, solo puede haber un voto por choice #}
+            {% with vote=choice.vote_set.first %}            
+                {{ vote }}
+            {% endwith %}    
+        {% else %}
+            No hay votos para esta opción.
+        {% endif %}
+{% endfor %}
+</ul>
+
+<a href="{% url 'polls:detail' question.id %}">Vote again?</a>

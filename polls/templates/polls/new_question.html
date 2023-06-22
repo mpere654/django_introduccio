@@ -1,0 +1,8 @@
+<h1> Nova pregunta </h1>
+
+<form action="/polls/new_question_add/" method="post">
+    {% csrf_token %}
+    {# as_p lo pone uno debajo el otro#}
+    {{ form.as_p }}
+    <input type="submit" value="Submit">
+</form>
