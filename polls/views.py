@@ -85,10 +85,11 @@ def vote(request, question_id):
         try: 
             selected_vote = Vote.objects.get(id = selected_choice.pk)
         except ObjectDoesNotExist:
-            selected_vote = Vote.objects.create(choice = selected_choice, votes= 1, vote_date = timezone.now(), ip = "test")
+            selected_vote = Vote.objects.create(choice = selected_choice, votes= 0, vote_date = timezone.now(), ip = "test")
         print(selected_vote)
         selected_vote.votes += 1
         selected_vote.save()
+        print("votado", selected_vote)
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
@@ -145,3 +146,8 @@ def new_choice(request):
         if form.is_valid():
             form.save()
     return render(request,"polls/new_choice_add.html", {"form":form})
+
+
+def dynamic(request):
+    #return HttpResponse("Form  dynamic")
+    return render(request,"polls/dynamic.html")

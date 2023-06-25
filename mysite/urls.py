@@ -18,7 +18,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+from polls import views, api
+
 urlpatterns = [
+    path("", views.index),
     path("polls/", include("polls.urls")),
-    path("admin/", admin.site.urls),
+    path("admin/", admin.site.urls), 
+
+    #API que programamos, probar con commando curl localhost:8000/api/get_questions
+    #curl localhost:8000/api/get_questions | python3 -m json.tool
+    path("api/get_questions", api.get_questions),
+    #ponemos un parametro a la api 
+    path("api/get_choices/<int:question_id>", api.get_choices),
 ]

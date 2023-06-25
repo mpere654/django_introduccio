@@ -1,0 +1,57 @@
+
+
+<h1> forms dinàmics</h1>
+ <select name="question" id="question" onchange="carrega_choices()">
+</select>
+<br>
+ <select name="choice" id="choice" disabled>
+ 	<option>selecciona pregunta</option>
+</select>
+
+
+
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+	//ejecuta al iniciar, ponerlo en onload mejor
+	$.ajax({
+		method: "GET",
+		url:"/api/get_questions",
+	})
+		.done(function (msg){
+			//alert("INFO: " + JSON.stringify(msg));
+			for (let i  in msg.questions){
+				//mostramos cada elemento
+				console.log(msg.questions[i].question_text)
+				text = msg.questions[i].question_text
+				id = msg.questions[i].id
+				let item = $("<option value='"+id+"'>"+text+"</option>")
+				$("#question").append (item);
+			}
+		});
+
+function carrega_choices(){
+	question_id = $("#question").val();
+
+	
+	$.ajax({
+			method: "GET",
+			url:"/api/get_choices/"+question_id ,
+		})
+			.done(function (msg){ 
+				//habilitar form y vaciar
+				$("#choice").prop("disabled", false);
+				$("#choice").empty();
+				alert("INFO: " + JSON.stringify(msg));  
+				for (let i  in msg.choices){
+					//mostramos cada elemento
+					console.log(msg.choices[i].choice_text)
+					text = msg.choices[i].choice_text
+					id = msg.choices[i].id
+					let item = $("<option value='"+id+"'>"+text+"</option>")
+					$("#choice").append (item);
+				}
+			});
+}
+
+</script>

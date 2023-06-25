@@ -1,0 +1,73 @@
+apt-get install mysql-server
+
+sudo mysql
+
+#creamos un usuario
+create user polls@localhost identified by "polls123";
+
+grant all privileges on polls.* to polls@localhost;
+
+#login
+mysql -u polls -p
+
+create database polls;
+
+use polls;
+
+show tables;
+
+#--- cambiaremos de sqlite3 a mysql
+#copiamos los datos a un json
+./manage.py dumpdata --natural-foreign --natural-primary > testdb.json
+#para cargar los datos en el sistema (independiente sistema SQL usemos)
+/manage.py loaddata testdb.json
+
+
+#instalamos funcionalidades python mysql
+apt-get install python3-dev default-libmysqlclient-dev build-essential pkg-config
+pip install mysqlclient
+
+
+#si miramos en mysite settings.py vemos la SECRET_KEY que la tendriamos que sacar
+
+#configuramos LA BD de MYSQL con los valores
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "polls",
+        "USER": "polls",
+        "PASSWORD": "polls123",
+        "HOST": "",
+        "PORT": "",
+    }
+}
+
+#configurado podemos hacer
+./manage.py migrate
+
+
+#control de variables
+https://django-environ.readthedocs.io/en/latest/quickstart.html
+
+pip install django-environ
+
+import environ
+import os
+env = environ.Env(
+       DEBUG=(bool,False) 
+)
+
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+
+DEBUG = env('DEBUG')
+SECRET_KEY = env('SECRET_KEY')
+
+
+DATABASES = {
+    'default': env.db(),
+  }
+
+
+#cargar los datos despues de hacer el migrate
+/manage.py loaddata testdb.json

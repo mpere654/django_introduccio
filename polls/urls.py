@@ -15,4 +15,7 @@ urlpatterns = [
     path("new_question/", views.new_question, name="new_question"),
     path("new_question_add/", views.new_question_add, name="new_question"),
     path("new_choice/", views.new_choice, name="new_choice"),
+    #dynamic forms
+    path("dynamic/", views.dynamic, name="dynamic"),
+
 ]

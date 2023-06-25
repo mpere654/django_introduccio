@@ -8,12 +8,12 @@
             {% comment %}
                 podemos sustituir por este
                 {% for vote in choice.vote_set.all %}
-                    {{ vote }}
+                     {{ vote }}
                 {% endfor %}  
             {% endcomment %}
             {# si existe voto cogemos el primer, solo puede haber un voto por choice #}
             {% with vote=choice.vote_set.first %}            
-                {{ vote }}
+                aaa {{ vote }}
             {% endwith %}    
         {% else %}
             No hay votos para esta opción.
