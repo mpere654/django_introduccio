@@ -1,0 +1,19 @@
+version: '3.1'
+#touch db.sqlite3
+#docker-compose up -d --build
+#si queremos usar un usuario hacer:
+#adduser usuario docker
+services:
+
+  django_app:
+    build: .
+    restart: always
+    ports: 
+      - 8000:8000
+    #variables entorna para django
+    environment:
+      - DATABASE_URL=sqlite:///db.sqlite3
+      - DEBUG=False
+      - SECRET_KEY=asecretkeyblabla
+    volumes:
+      - ./db.sqlite3:/code/db.sqlite3

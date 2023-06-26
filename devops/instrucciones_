@@ -71,3 +71,66 @@ DATABASES = {
 
 #cargar los datos despues de hacer el migrate
 /manage.py loaddata testdb.json
+
+
+
+#asgi.py wsgi.py fitxers per pujar a producció
+CGI common gateway interface -> clasico PHP, PERL
+WSGI  web server gateway interface -> se ha vuelto antigua
+ASGI async server gateway interface -> mas reciente
+
+Cuando se pone en producción los ficheros CSS, js imagenes estan en static y se encarga el servidor web de dar.
+#instalamos 
+pip install uwsgi
+#probar con: (lanza el servidor web de mysite wsgi)
+uwsgi --http :8000 --module mysite.wsgi
+#al hacer ctrl+F5 borra cache web y veremos que las css desaparecen. los ficheros statics no se dan.
+
+#En settings.py añadimos
+#ya existe
+STATIC_URL = '/static/'
+#añadimos para hacer despliegue
+
+#RECOPILAMOS los ficheros static
+./manage.py collectstatic
+STATIC_ROOT = 'static/'
+
+
+#instalamos nginx
+apt-get install nginx
+https://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html
+
+#editaremos de nginx el fichero de creacion nuevo a 
+/etc/nginx/sites-availabre/polls.conf copiamos la configuracion de ejemplo
+#añadimos las modificacions de las rutas de static y media con las rutas del path projecto de django
+creamos un enlace simbolico a sites-enabled, dentro de sites-enabled
+ln -s ../sites-available/polls.conf
+
+#cuando nginx esta funcionando
+#arrancamos uwsgi dentro la carpeta projecto django
+uwsgi --socket :8001 --module mysite.wsgi
+#le hacemos un cambio de permisos a la carpeta static de dentro de mysite (pryecto)
+chmod 755 static
+#puede que no haga falta
+
+
+#instalar supervisord, supervisord.org
+apt-get install supervisor
+#consola, ejecutar, mandar ordenes
+supervisorctl
+supervisorctl help
+
+#editar el fichero de supervisor
+#creamos un fichero en /etc/supervisord/conf.d/polls.conf
+#polls es un nombre relacionado con la app de django que se está haciendo
+#vigilar la rutas
+[program:polls]
+directory=/home/user/dev/mysite
+command=/home/user/dev/djenv/bin/uwsgi --socket :8001 --module mysite.wsgi
+
+#cargamos supervisor su nueva configuracion
+sudo supervisorctl reload
+#con status solo vemos si esta ejecutando algo (no es un servicio para ver status tradicional)
+sudo supervisorctl status
+
+
